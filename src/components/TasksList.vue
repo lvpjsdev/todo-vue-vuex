@@ -5,7 +5,7 @@ import { computed } from 'vue';
 
 const store = useStore();
 
-const tasks = computed(() => store.state.tasks);
+const tasks = computed(() => store.getters.filteredTasks);
 const isPending = computed(() => store.state.isPending);
 </script>
 

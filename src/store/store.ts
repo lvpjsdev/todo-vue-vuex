@@ -6,6 +6,7 @@ import { taskApi } from '../api';
 export interface State {
   tasks: Task[];
   isPending: boolean;
+  filter: Filter;
 }
 
 export const storeKey: InjectionKey<Store<State>> = Symbol();
@@ -14,6 +15,7 @@ export const store = createStore<State>({
   state: {
     tasks: [],
     isPending: false,
+    filter: 'all',
   },
   mutations: {
     updateTasksData: (state, tasks: Task[]) => {
@@ -34,6 +36,9 @@ export const store = createStore<State>({
     },
     setIsPending: (state, flag: boolean) => {
       state.isPending = flag;
+    },
+    setFilter: (state, filter: Filter) => {
+      state.filter = filter;
     },
   },
   actions: {
@@ -78,7 +83,9 @@ export const store = createStore<State>({
   },
   getters: {
     allTasks: (state) => state.tasks,
-    filterTasks: (state) => (filter: Filter) => {
+    filteredTasks: (state) => {
+      const filter = state.filter;
+
       switch (filter) {
         case 'undone':
           return state.tasks.filter(({ completed }) => !completed);
