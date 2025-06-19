@@ -1,24 +1,34 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import { type Task } from '../types';
+import { useStore } from '../store/store';
 interface Props {
   task: Task;
 }
 
+const store = useStore();
 const { task } = defineProps<Props>();
+const isComplete = ref(task.completed);
 
-const completed = reactive({
-  complete: task.completed,
-});
+const onCompleteChange = () => {
+  store.dispatch('update', { id: task.id, flag: !isComplete.value });
+};
 </script>
 
 <template>
-  <p :class="completed">{{ task.title }}</p>
+  <div class="wrapper">
+    <input type="checkbox" v-model="isComplete" @click="onCompleteChange" />
+    <p :class="{ complete: isComplete }">{{ task.title }}</p>
+  </div>
 </template>
 
 <style scoped>
 .complete {
   text-decoration: line-through;
   color: red;
+}
+
+.wrapper {
+  display: flex;
 }
 </style>
