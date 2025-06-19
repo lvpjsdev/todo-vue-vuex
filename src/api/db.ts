@@ -30,11 +30,18 @@ export const taskDb: DataBase = {
   addTask: (task) => {
     tasks.push(task);
   },
-  removeTask: (taskId: number) => {
+  removeTask: (taskId) => {
     const index = tasks.findIndex(({ id }) => id === taskId);
     const beforeArr = tasks.slice(1, index);
     const afterArr = tasks.slice(index);
 
     return [...beforeArr, ...afterArr];
+  },
+  update: (id, payload) => {
+    const task = tasks.find(({ id: taskId }) => taskId === id);
+    if (task) {
+      task.title = payload.title || task.title;
+      task.completed = payload.completed || task.completed;
+    }
   },
 };
