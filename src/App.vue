@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AddTask from './components/AddTask.vue';
 import TasksList from './components/TasksList.vue';
 import { useStore } from './store/store';
 
@@ -7,6 +8,7 @@ store.dispatch('get');
 </script>
 
 <template>
+  <AddTask />
   <TasksList />
 </template>
 

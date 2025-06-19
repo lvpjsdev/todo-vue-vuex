@@ -46,9 +46,12 @@ export const store = createStore<State>({
       commit('updateTasksData', tasks);
       dispatch('togglePending');
     },
-    add: async ({ commit, dispatch }, payload: Task) => {
+    add: async ({ commit, dispatch }, payload: Partial<Task>) => {
       dispatch('togglePending');
-      await taskApi.addTask(payload);
+      await taskApi.addTask({
+        title: payload.title || '',
+        completed: payload.completed || false,
+      });
       commit('addTask', payload);
       dispatch('togglePending');
     },
