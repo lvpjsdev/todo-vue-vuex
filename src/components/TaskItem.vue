@@ -13,12 +13,17 @@ const isComplete = ref(task.completed);
 const onCompleteChange = () => {
   store.dispatch('update', { id: task.id, flag: !isComplete.value });
 };
+
+const onDelete = () => {
+  store.dispatch('delete', task.id);
+};
 </script>
 
 <template>
   <div class="wrapper">
     <input type="checkbox" v-model="isComplete" @click="onCompleteChange" />
     <p :class="{ complete: isComplete }">{{ task.title }}</p>
+    <button @click="onDelete">Delete</button>
   </div>
 </template>
 

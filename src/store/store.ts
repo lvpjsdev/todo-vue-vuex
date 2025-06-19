@@ -17,6 +17,7 @@ export const store = createStore<State>({
     isPending: false,
     filter: 'all',
   },
+  //стор и мутации мы будем так же использовать для оптимистичного обновления
   mutations: {
     updateTasksData: (state, tasks: Task[]) => {
       state.tasks = [...tasks];
@@ -25,7 +26,7 @@ export const store = createStore<State>({
       state.tasks.push(task);
     },
     deleteTask: (state, taskId: number) => {
-      state.tasks = [...state.tasks.filter(({ id }) => id === taskId)];
+      state.tasks = [...state.tasks.filter(({ id }) => id !== taskId)];
     },
     updateTask: (
       state,
@@ -63,7 +64,7 @@ export const store = createStore<State>({
     delete: async ({ commit, dispatch }, payload: number) => {
       dispatch('togglePending');
       await taskApi.removeTask(payload);
-      commit('addTask', payload);
+      commit('deleteTask', payload);
       dispatch('togglePending');
     },
     update: async (
