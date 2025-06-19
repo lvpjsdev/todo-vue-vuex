@@ -2,7 +2,7 @@ import { type Task } from '../types';
 
 export type DataBase = {
   getAll: () => Task[];
-  addTask: (task: Task) => void;
+  addTask: (task: Omit<Task, 'id'>) => void;
   removeTask: (id: number) => void;
   update: (id: number, payload: Partial<Task>) => void;
 };
@@ -28,7 +28,11 @@ const tasks: Task[] = [
 export const taskDb: DataBase = {
   getAll: () => tasks,
   addTask: (task) => {
-    tasks.push(task);
+    const id = tasks.length ? tasks[tasks.length - 1].id + 1 : 1;
+    tasks.push({
+      id,
+      ...task,
+    });
   },
   removeTask: (taskId) => {
     const index = tasks.findIndex(({ id }) => id === taskId);
