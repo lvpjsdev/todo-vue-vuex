@@ -55,21 +55,21 @@ export const store = createStore<State>({
     //здесь и далее мы сначала оптимистично обновляем стор, а потом уже обращаемся к апи
     //если вдруг что пойдет не так, откатим стейт к прежнему состоянию и покажем ошибку
     //для этого используем withErrorHandling
-    add: withErrorHandling(async ({ commit }, payload: Partial<Task>) => {
-      commit('addTask', payload);
-      await taskApi.addTask({
-        title: payload.title || '',
-        completed: payload.completed || false,
-      });
-    }),
-    delete: withErrorHandling(
-      withPending(async ({ commit, dispatch }, payload: number) => {
-        commit('deleteTask', payload);
-        await taskApi.removeTask(payload);
+    add: withPending(
+      withErrorHandling(async ({ commit }, payload: Partial<Task>) => {
+        commit('addTask', payload);
+        await taskApi.addTask({
+          title: payload.title || '',
+          completed: payload.completed || false,
+        });
       })
     ),
+    delete: withErrorHandling(async ({ commit }, payload: number) => {
+      commit('deleteTask', payload);
+      await taskApi.removeTask(payload);
+    }),
     update: withErrorHandling(
-      async ({ commit, dispatch }, payload: { id: number; flag: boolean }) => {
+      async ({ commit }, payload: { id: number; flag: boolean }) => {
         commit('updateTask', {
           taskId: payload.id,
           completeFlag: payload.flag,

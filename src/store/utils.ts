@@ -10,11 +10,11 @@ export const withPending = <
   func: T
 ) => {
   return async (context: ActionContext<State, State>, ...args: any[]) => {
-    context.commit('setIsPending');
+    context.dispatch('togglePending');
     try {
       await func(context, ...args);
     } finally {
-      context.commit('setIsPending');
+      context.dispatch('togglePending');
     }
   };
 };
