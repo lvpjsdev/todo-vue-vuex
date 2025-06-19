@@ -4,6 +4,7 @@ export type DataBase = {
   getAll: () => Task[];
   addTask: (task: Task) => void;
   removeTask: (id: number) => void;
+  update: (id: number, payload: Partial<Task>) => void;
 };
 
 const tasks: Task[] = [

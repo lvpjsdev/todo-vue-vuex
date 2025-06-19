@@ -3,3 +3,5 @@ export interface Task {
   title: string;
   completed: boolean;
 }
+
+export type Filter = 'done' | 'undone' | 'all';
