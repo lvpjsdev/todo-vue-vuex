@@ -37,27 +37,32 @@ export const store = createStore<State>({
     },
   },
   actions: {
-    get: async ({ commit }) => {
+    togglePending: ({ state, commit }) => {
+      commit('setIsPending', !state.isPending);
+    },
+    get: async ({ commit, dispatch }) => {
+      dispatch('togglePending');
       const tasks = await taskApi.getAll();
       commit('updateTasksData', tasks);
+      dispatch('togglePending');
     },
     add: async ({ commit, dispatch }, payload: Task) => {
-      dispatch('setIsPending', true);
+      dispatch('togglePending');
       await taskApi.addTask(payload);
       commit('addTask', payload);
-      dispatch('setIsPending', false);
+      dispatch('togglePending');
     },
     delete: async ({ commit, dispatch }, payload: number) => {
-      dispatch('setIsPending', true);
+      dispatch('togglePending');
       await taskApi.removeTask(payload);
       commit('addTask', payload);
-      dispatch('setIsPending', false);
+      dispatch('togglePending');
     },
     update: async (
       { commit, dispatch },
       payload: { id: number; flag: boolean }
     ) => {
-      dispatch('setIsPending', true);
+      dispatch('togglePending');
       await taskApi.update(payload.id, {
         completed: payload.flag,
       });
@@ -65,7 +70,7 @@ export const store = createStore<State>({
         taskId: payload.id,
         completeFlag: payload.flag,
       });
-      dispatch('setIsPending', false);
+      dispatch('togglePending');
     },
   },
   getters: {
