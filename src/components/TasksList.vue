@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { taskApi } from '../api/api';
+import { useStore } from '../store/store';
 import TaskItem from './TaskItem.vue';
-const tasks = await taskApi.getAll();
+import { computed } from 'vue';
+
+const store = useStore();
+
+const tasks = computed(() => store.state.tasks);
+const isPending = computed(() => store.state.isPending);
 </script>
 
 <template>
-  <TaskItem v-for="task in tasks" :task="task" :key="task.id" />
+  <p v-if="isPending">Loading...</p>
+  <TaskItem v-else v-for="task in tasks" :task="task" :key="task.id" />
 </template>
 
 <style scoped>

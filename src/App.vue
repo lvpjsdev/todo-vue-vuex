@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import TasksList from './components/TasksList.vue';
+import { useStore } from './store/store';
+
+const store = useStore();
+store.dispatch('get');
 </script>
 
 <template>
-  <Suspense>
-    <TasksList />
-    <template #fallback>Loading...</template>
-  </Suspense>
+  <TasksList />
 </template>
 
 <style scoped>
