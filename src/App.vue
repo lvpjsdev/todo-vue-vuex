@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AddTask from './components/AddTask.vue';
+import Error from './components/Error.vue';
 import FilterPick from './components/FilterPick.vue';
 import TasksList from './components/TasksList.vue';
 import { useStore } from './store/store';
@@ -12,6 +13,7 @@ store.dispatch('get');
   <AddTask />
   <TasksList />
   <FilterPick />
+  <Error />
 </template>
 
 <style scoped>

@@ -12,9 +12,12 @@ type Func = (...args: any[]) => any;
 
 const wrapApiCall = <T extends Function>(func: T, delay = 500) => {
   return (...args: ArgumentTypes<T>) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(func(...args));
+        //Для симуляции ошибки будем кидать дайс, по умолчанию с шансом в 10%
+        Math.random() > Number(import.meta.env.VITE_ERROR_CHANCE ?? 0.1)
+          ? resolve(func(...args))
+          : reject(new Error('Something goes wrong'));
       }, delay);
     }) as ReturnTypeAsync<T>;
   };
@@ -34,4 +37,4 @@ function wrapAll<T extends Record<string, Func>>(
   };
 }
 
-export const taskApi = wrapAll(taskDb);
+export const taskApi = wrapAll(taskDb, import.meta.env.VITE_API_DELAY ?? 500);

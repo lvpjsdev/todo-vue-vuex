@@ -2,12 +2,8 @@ import { type InjectionKey } from 'vue';
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
 import type { Filter, Task } from '../types';
 import { taskApi } from '../api';
-
-export interface State {
-  tasks: Task[];
-  isPending: boolean;
-  filter: Filter;
-}
+import { withErrorHandling, withPending } from './utils';
+import type { State } from './types';
 
 export const storeKey: InjectionKey<Store<State>> = Symbol();
 
@@ -16,8 +12,9 @@ export const store = createStore<State>({
     tasks: [],
     isPending: false,
     filter: 'all',
+    errMsg: '',
   },
-  //стор и мутации мы будем так же использовать для оптимистичного обновления
+  //так как мы точно знаем что должно происходить, мы можем обновлять наш стор оптиместично
   mutations: {
     updateTasksData: (state, tasks: Task[]) => {
       state.tasks = [...tasks];
@@ -41,46 +38,51 @@ export const store = createStore<State>({
     setFilter: (state, filter: Filter) => {
       state.filter = filter;
     },
+    setErrMsg: (state, message: string) => {
+      state.errMsg = message;
+    },
   },
   actions: {
     togglePending: ({ state, commit }) => {
       commit('setIsPending', !state.isPending);
     },
-    get: async ({ commit, dispatch }) => {
-      dispatch('togglePending');
-      const tasks = await taskApi.getAll();
-      commit('updateTasksData', tasks);
-      dispatch('togglePending');
-    },
-    add: async ({ commit, dispatch }, payload: Partial<Task>) => {
-      dispatch('togglePending');
+    get: withPending(
+      withErrorHandling(async ({ commit }) => {
+        const tasks = await taskApi.getAll();
+        commit('updateTasksData', tasks);
+      })
+    ),
+    //здесь и далее мы сначала оптимистично обновляем стор, а потом уже обращаемся к апи
+    //если вдруг что пойдет не так, откатим стейт к прежнему состоянию и покажем ошибку
+    //для этого используем withErrorHandling
+    add: withErrorHandling(async ({ commit }, payload: Partial<Task>) => {
+      commit('addTask', payload);
       await taskApi.addTask({
         title: payload.title || '',
         completed: payload.completed || false,
       });
-      commit('addTask', payload);
-      dispatch('togglePending');
-    },
-    delete: async ({ commit, dispatch }, payload: number) => {
-      dispatch('togglePending');
-      await taskApi.removeTask(payload);
-      commit('deleteTask', payload);
-      dispatch('togglePending');
-    },
-    update: async (
-      { commit, dispatch },
-      payload: { id: number; flag: boolean }
-    ) => {
-      dispatch('togglePending');
-      await taskApi.update(payload.id, {
-        completed: payload.flag,
-      });
-      commit('updateTask', {
-        taskId: payload.id,
-        completeFlag: payload.flag,
-      });
-      dispatch('togglePending');
-    },
+    }),
+    delete: withErrorHandling(
+      withPending(async ({ commit, dispatch }, payload: number) => {
+        commit('deleteTask', payload);
+        await taskApi.removeTask(payload);
+      })
+    ),
+    update: withErrorHandling(
+      async ({ commit, dispatch }, payload: { id: number; flag: boolean }) => {
+        commit('updateTask', {
+          taskId: payload.id,
+          completeFlag: payload.flag,
+        });
+        await taskApi.update(payload.id, {
+          completed: payload.flag,
+        });
+      }
+    ),
+    resetError: withErrorHandling(async ({ commit, dispatch }) => {
+      commit('setErrMsg', '');
+      await dispatch('get');
+    }),
   },
   getters: {
     allTasks: (state) => state.tasks,
@@ -99,6 +101,6 @@ export const store = createStore<State>({
   },
 });
 
-export function useStore() {
+export const useStore = () => {
   return baseUseStore(storeKey);
-}
+};
