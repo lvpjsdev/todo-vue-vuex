@@ -1,5 +1,40 @@
-# Vue 3 + TypeScript + Vite
+## Начало работы
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Чтобы запустить проект локально, выполните следующие шаги:
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+1. Установите зависимости:
+
+   ```bash
+   npm install
+   ```
+
+2. Запустите сервер разработки:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Откройте браузер и перейдите по адресу `http://localhost:5173` (или порту, указанному в терминале).
+
+## Сборка для продакшена
+
+Чтобы собрать проект для продакшена:
+
+```bash
+npm run build
+```
+
+Чтобы просмотреть продакшен-сборку локально:
+
+```bash
+npm run preview
+```
+
+## Дополнительная информация
+
+В проекте реализована симуляция API, включая возможность симулировать ошибки. Частоту ошибок
+(по умолчанию 10%) можно задать в файле `.env`, изменив значение переменной `VITE_ERROR_CHANCE`.
+
+Задержку API (по умолчанию 500мс) можно отрегулировать переменной `VITE_API_DELAY`.
+
+Также в проекте используются иконки для улучшения визуального восприятия интерфейса. Я счёл, что это не противоречит условию задачи о запрете использования UI-фреймворков, так как иконки не являются полноценным UI-фреймворком.
