@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { X as XIcon } from 'lucide-vue-next';
 import { type Task } from '../types';
 import { useStore } from '../store';
+import Button from './ui/Button.vue';
 interface Props {
   task: Task;
 }
@@ -23,7 +25,9 @@ const onDelete = () => {
   <div class="wrapper">
     <input type="checkbox" v-model="isComplete" @click="onCompleteChange" />
     <p :class="{ complete: isComplete }">{{ task.title }}</p>
-    <button @click="onDelete">Delete</button>
+    <Button @click="onDelete">
+      <template #after><XIcon /></template>
+    </Button>
   </div>
 </template>
 
@@ -35,5 +39,6 @@ const onDelete = () => {
 
 .wrapper {
   display: flex;
+  align-items: center;
 }
 </style>

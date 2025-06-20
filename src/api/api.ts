@@ -6,7 +6,7 @@ const wrapApiCall = <T extends Function>(func: T, delay = 500) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         //Для симуляции ошибки будем кидать дайс, по умолчанию с шансом в 10%
-        Math.random() > Number(import.meta.env.VITE_ERROR_CHANCE ?? 0.1)
+        Math.random() >= Number(import.meta.env.VITE_ERROR_CHANCE ?? 0.1)
           ? resolve(func(...args))
           : reject(new Error('Something goes wrong'));
       }, delay);
