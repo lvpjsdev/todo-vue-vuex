@@ -1,41 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { type Filter } from '../types';
 import { useStore } from '../store';
+import Button from './ui/Button.vue';
 
 const store = useStore();
-const filter = ref<Filter>('all');
+const filter = computed(() => store.state.filter);
 
-const onChange = () => {
-  store.commit('setFilter', filter);
+const onChange = (value: Filter) => {
+  store.commit('setFilter', value);
 };
 </script>
 
 <template>
-  <input
-    id="all"
-    v-model="filter"
-    type="radio"
-    value="all"
-    @change="onChange"
-  />
-  <label for="all">All</label>
-
-  <input
-    id="done"
-    v-model="filter"
-    type="radio"
-    value="done"
-    @change="onChange"
-  />
-  <label for="done">Done</label>
-
-  <input
-    id="undone"
-    v-model="filter"
-    type="radio"
-    value="undone"
-    @change="onChange"
-  />
-  <label for="undone">Undone</label>
+  <div class="wrapper">
+    <Button :is-active="filter === 'all'" @click="onChange('all')">All</Button>
+    <Button :is-active="filter === 'done'" @click="onChange('done')"
+      >Done</Button
+    >
+    <Button :is-active="filter === 'undone'" @click="onChange('undone')"
+      >Undone</Button
+    >
+  </div>
 </template>
+
+<style scoped>
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+</style>
