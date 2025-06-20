@@ -8,14 +8,14 @@ const store = useStore();
 const taskTitle = ref('');
 
 const onAdd = () => {
-  store.dispatch('add', { title: taskTitle });
+  store.dispatch('add', { title: taskTitle.value });
+  taskTitle.value = '';
 };
 </script>
 
 <template>
   <div class="wrapper">
-    <input v-model="taskTitle" class=".input" />
-    <!-- <button @click="onAdd">+</button> -->
+    <input v-model="taskTitle" class="input" @keyup.enter="onAdd" />
     <Button @click="onAdd">
       <template #after>
         <CirclePlus :size="24" />
@@ -28,10 +28,16 @@ const onAdd = () => {
 .wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  width: 1280px;
 }
 
 .input {
-  height: 1.1rem;
+  height: 100%;
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 </style>

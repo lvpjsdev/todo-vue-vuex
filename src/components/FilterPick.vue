@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { type Filter } from '../types';
 import { useStore } from '../store';
 import Button from './ui/Button.vue';
@@ -28,6 +28,8 @@ const onChange = (value: Filter) => {
 .wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
 }
 </style>

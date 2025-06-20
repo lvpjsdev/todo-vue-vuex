@@ -7,7 +7,7 @@ const { isActive = false } = defineProps<Props>();
 </script>
 
 <template>
-  <button @click="$emit('click')" :class="{ active: isActive }">
+  <button @click="$emit('click')" :class="['button', { active: isActive }]">
     <div class="wrapper">
       <slot name="before"></slot>
       <slot></slot>
@@ -21,6 +21,10 @@ const { isActive = false } = defineProps<Props>();
   display: flex;
   flex-direction: row;
   gap: 2rem;
+}
+
+.button {
+  padding: 0.6rem;
 }
 
 .active {

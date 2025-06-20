@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { X as XIcon } from 'lucide-vue-next';
+import { Square } from 'lucide-vue-next';
+import { SquareCheckBig } from 'lucide-vue-next';
 import { type Task } from '../types';
 import { useStore } from '../store';
 import Button from './ui/Button.vue';
@@ -10,7 +12,7 @@ interface Props {
 
 const store = useStore();
 const { task } = defineProps<Props>();
-const isComplete = ref(task.completed);
+const isComplete = computed(() => task.completed);
 
 const onCompleteChange = () => {
   store.dispatch('update', { id: task.id, flag: !isComplete.value });
@@ -23,8 +25,13 @@ const onDelete = () => {
 
 <template>
   <div class="wrapper">
-    <input type="checkbox" v-model="isComplete" @click="onCompleteChange" />
-    <p :class="{ complete: isComplete }">{{ task.title }}</p>
+    <SquareCheckBig
+      v-if="isComplete"
+      @click="onCompleteChange"
+      class="clickable"
+    />
+    <Square v-if="!isComplete" @click="onCompleteChange" class="clickable" />
+    <p :class="['text', { complete: isComplete }]">{{ task.title }}</p>
     <Button @click="onDelete">
       <template #after><XIcon /></template>
     </Button>
@@ -40,5 +47,15 @@ const onDelete = () => {
 .wrapper {
   display: flex;
   align-items: center;
+  gap: 1rem;
+}
+
+.text {
+  font-size: 1.25rem;
+  padding: 0;
+}
+
+.clickable {
+  cursor: pointer;
 }
 </style>
