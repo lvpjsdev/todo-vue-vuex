@@ -1,11 +1,5 @@
 import { type Task } from '../types';
-
-export type DataBase = {
-  getAll: () => Task[];
-  addTask: (task: Omit<Task, 'id'>) => void;
-  removeTask: (id: number) => void;
-  update: (id: number, payload: Partial<Task>) => void;
-};
+import type { DataBase } from './types';
 
 const tasks: Task[] = [
   {

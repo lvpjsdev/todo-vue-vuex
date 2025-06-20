@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStore } from '../store/store';
+import { useStore } from '../store';
 import TaskItem from './TaskItem.vue';
 import { computed } from 'vue';
 

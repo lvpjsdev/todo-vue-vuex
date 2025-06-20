@@ -1,14 +1,5 @@
 import { taskDb } from './db';
-
-type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any
-  ? A
-  : never;
-
-type ReturnTypeAsync<F extends Function> = F extends (...args: any) => infer R
-  ? Promise<R>
-  : never;
-
-type Func = (...args: any[]) => any;
+import type { ArgumentTypes, Func, ReturnTypeAsync } from './types';
 
 const wrapApiCall = <T extends Function>(func: T, delay = 500) => {
   return (...args: ArgumentTypes<T>) => {

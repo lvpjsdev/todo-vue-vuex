@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { type Filter } from '../types';
-import { useStore } from '../store/store';
+import { useStore } from '../store';
 
 const store = useStore();
 const filter = ref<Filter>('all');

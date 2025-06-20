@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import './style.css';
 import App from './App.vue';
-import { store, storeKey } from './store/store';
+import { store, storeKey } from './store';
 
 createApp(App).use(store, storeKey).mount('#app');

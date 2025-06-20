@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { type Task } from '../types';
-import { useStore } from '../store/store';
+import { useStore } from '../store';
 interface Props {
   task: Task;
 }
